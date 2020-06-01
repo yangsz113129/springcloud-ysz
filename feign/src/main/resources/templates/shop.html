@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap-table.css}">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap3/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="js/bootstrap3/css/bootstrap.css">
+    <script src="js/bootstrap-treeview/bootstrap-treeview.min.js"></script>
+    <link rel="stylesheet" href="js/bootstrap-treeview/bootstrap-treeview.min.css">
+    <script src="js/bootStrap-addTabs/bootstrap.addtabs.js"></script>
+    <link rel="stylesheet" href="js/bootStrap-addTabs/bootstrap.addtabs.css">
+
+    <link rel="stylesheet" href="js/bootstrap-table/bootstrap-table.css">
+    <script src="js/bootstrap-table/bootstrap-table.js"></script>
+    <script src="js/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Insert title here</title>
+    <!-- 引入jquery -->
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+
+
+    <!-- 引入bootstrap的css -->
+    <link  href="js/bootstrap/css/bootstrap.min.css" rel="stylesheet" >
+    <!-- 引入bootstrap-treeview的css -->
+    <link  href="js/treeview/bootstrap-treeview.min.css" rel="stylesheet" >
+    <!-- 引入bootstrap-addTabs的css -->
+    <link  href="js/addTabs/addTabs.css" rel="stylesheet" >
+    <!-- 引入bootstrap-table的css -->
+    <link  href="js/table/bootstrap-table.min.css" rel="stylesheet" >
+    <!-- 引入fileinput的css -->
+    <link type="text/css" rel="stylesheet" href="js/fileinput/css/fileinput.min.css" />
+    <!-- 引入my97 -->
+    <script type="text/javascript" src="js/my97/WdatePicker.js"></script>
+    <!-- 引入bootstrap的js-->
+    <script type="text/javascript" src="js/bootstrap/js/bootstrap.min.js"></script>
+    <!-- 引入bootstrap的js-->
+    <script type="text/javascript" src="js/treeview/bootstrap-treeview.min.js"></script>
+    <!-- 引入bootstrap的js-->
+    <script type="text/javascript" src="js/addTabs/addTabs.js"></script>
+    <!-- 引入bootstrap-table的js-->
+    <script type="text/javascript" src="js/table/bootstrap-table.min.js"></script>
+    <script type="text/javascript" src="js/table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <!-- 引入bootbox.js -->
+    <script type="text/javascript" src="js/bootbox/bootbox.js"></script>
+    <!-- 引入fileinput的js -->
+    <script type="text/javascript" src="js/fileinput/js/fileinput.min.js"></script>
+    <!--  引入fileinput的js -->
+    <script type="text/javascript" src="js/fileinput/js/locales/zh.js"></script>
+    <script type="text/javascript" src="js/fileinput/themes/fa/theme.js"></script>
+
+
+
+
+</head>
+<body>
+<div id="toolbar">
+    <form class="form-inline">
+        <div class="form-group">
+
+            <div class="col-sm-4">
+                <button type="button" class="btn btn-info " id="bookName"/>新增机构
+            </div>
+        </div>
+        <div class="form-group">
+
+            <div class="col-sm-4">
+                <button type="button" class="btn btn-info " id="bookName"/>联系人
+            </div>
+        </div>
+
+        <div class="form-group">
+
+            <div class="col-sm-8">
+                <input type="text" class="form-control" id="bookName"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-12">
+                <select class="form-control" id="bookType" ></select>
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-3">
+                <button type="button" onclick="search()" class="btn btn-info glyphicon glyphicon-search">查询</button>
+            </div>
+        </div>
+
+    </form>
+</div>
+<table id="datatable" class="table table-hover"></table>
+<script type="text/javascript" th:inline="none">
+
+    $(function(){
+        initTable();
+    })
+
+
+    function initTable(){
+        $("#datatable").bootstrapTable({
+            toolbar:'#toolbar',
+            url: "../shopSelect",
+            pagination:true, //是否展示分页
+            pageList:[2,3,4],//分页组件
+            pageNumber:1,
+            pageSize:2,//默认每页条数
+            showColumns:false,//是否显示 内容列下拉框
+            showToggle:false,//是否显示 切换试图（table/card）按钮
+            showPaginationSwitch:false,//是否显示 数据条数选择框
+            showRefresh:false,//是否显示刷新按钮
+            detailView:false,//设置为 true 可以显示详细页面模式。
+            showFooter:false,//是否显示列脚
+            clickToSelect: true, //是否启用点击选中行
+            sidePagination:'server',//分页方式：client客户端分页，server服务端分页（*
+            queryParams:function(){
+                return {
+                    page:this.pageNumber,
+                    rows:this.pageSize,
+                    //infoName: $("#infoName").val(),
+                };
+            },
+            columns:[[
+                {field:'shopId',title:'编号'},
+                {field:'shopName', title: '商品名称'},
+                {field:'shopImg', title: '商品图片'},
+                {field:'shopPrice', title: '商品价格'},
+                {field:'shopKuXun', title: '库存状态'},
+                {field:'shopState', title: '商品状态',
+                    formatter: function(value,row,index){
+                        return value==1?"上架中":"下架";
+                    }},
+                {field:'cz', title: '操作',
+                    formatter: function(value,row,index){
+                        return "<a href='javaScript:bianjiInfo("+row.id+")'>编辑</a>|" +
+                            "<a href='javaScript:deleteInfo("+row.id+")'>删除</a>|" +
+                            "<a href='javaScript:selectInfo("+row.id+")'>查看</a>";
+                    }
+                }
+
+            ]]
+        })
+    }
+
+        /*function initTable(){
+            $("#datatable").bootstrapTable({
+                toolbar:'#toolbar',
+                url: "AdmSelect",
+
+                columns:[[
+                    {field:'id',title:'编号'},
+                    {field:'mingCheng', title: '机构名称'},
+                    {field:'jiBie', title: '机构级别'},
+                    {field:'area', title: '省份/市'},
+                    {field:'jingBanRen', title: '经办人'},
+                    {field:'lianXiRen', title: '联系人'},
+                    {field:'shenHe', title: '审核状态',
+                        formatter: function(value,row,index){
+                            return value==1?"已审核":"未审核";
+                        }},
+                    {field:'cz', title: '操作',
+                        formatter: function(value,row,index){
+                            return "<a href='javaScript:bianjiInfo("+row.id+")'>编辑</a>|" +
+                                "<a href='javaScript:deleteInfo("+row.id+")'>删除</a>|" +
+                                "<a href='javaScript:selectInfo("+row.id+")'>查看</a>";
+                        }
+                    }
+                ]]
+            })
+        }*/
+
+</script>
+</body>
+</html>
